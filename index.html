@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOMOLAND中国官方验证器</title>
+    <title>产品序列号验证器</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,7 +19,7 @@
             padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
         
@@ -28,7 +28,7 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
+            max-width: 800px;
             width: 100%;
             text-align: center;
         }
@@ -45,9 +45,39 @@
             line-height: 1.5;
         }
         
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7f8c8d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+            text-align: left;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .input-group {
             margin-bottom: 20px;
-            text-align: left;
         }
         
         label {
@@ -57,7 +87,7 @@
             color: #2c3e50;
         }
         
-        input {
+        input, textarea {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
@@ -66,7 +96,12 @@
             transition: border-color 0.3s;
         }
         
-        input:focus {
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        input:focus, textarea:focus {
             border-color: #3498db;
             outline: none;
         }
@@ -83,6 +118,7 @@
             width: 100%;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            margin-bottom: 10px;
         }
         
         button:hover {
@@ -92,6 +128,14 @@
         
         button:active {
             transform: translateY(0);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
         }
         
         .result {
@@ -125,7 +169,46 @@
             margin-bottom: 15px;
         }
         
-        @media (max-width: 480px) {
+        .batch-summary {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .verification-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .verification-item.valid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .verification-item.invalid {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .batch-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .batch-actions button {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
             .container {
                 padding: 20px;
                 margin: 10px;
@@ -133,6 +216,24 @@
             
             h1 {
                 font-size: 1.5rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .batch-actions {
+                flex-direction: column;
+            }
+            
+            #batch-tab {
+                display: none; /* 移动端隐藏批量验证 */
+            }
+        }
+        
+        @media (min-width: 769px) {
+            #batch-tab {
+                display: block; /* PC端显示批量验证 */
             }
         }
     </style>
@@ -142,33 +243,67 @@
         <div class="logo">
             <i class="fas fa-shield-alt"></i>
         </div>
-        <h1>MOMOLAND中国官方验证器</h1>
+        <h1>产品序列号验证器</h1>
         <p>请输入您的产品序列号进行验证</p>
         
-        <div class="input-group">
-            <label for="serial-input"><i class="fas fa-key"></i> 序列号</label>
-            <input type="text" id="serial-input" placeholder="请输入产品序列号">
+        <div class="tabs">
+            <div class="tab active" data-tab="single">单个验证</div>
+            <div class="tab" data-tab="batch" id="batch-tab">批量验证</div>
         </div>
         
-        <button id="verify-btn">
-            <i class="fas fa-check-circle"></i> 验证序列号
-        </button>
+        <div class="tab-content active" id="single-tab">
+            <div class="input-group">
+                <label for="serial-input"><i class="fas fa-key"></i> 序列号</label>
+                <input type="text" id="serial-input" placeholder="请输入产品序列号">
+            </div>
+            
+            <button id="verify-btn">
+                <i class="fas fa-check-circle"></i> 验证序列号
+            </button>
+            
+            <div class="result" id="single-result"></div>
+        </div>
         
-        <div class="result" id="result"></div>
+        <div class="tab-content" id="batch-tab">
+            <div class="input-group">
+                <label for="batch-input"><i class="fas fa-list"></i> 批量验证 (每行一个序列号)</label>
+                <textarea id="batch-input" placeholder="请输入多个序列号，每行一个"></textarea>
+            </div>
+            
+            <button id="verify-batch-btn" class="btn-success">
+                <i class="fas fa-tasks"></i> 批量验证
+            </button>
+            
+            <div class="result" id="batch-result"></div>
+        </div>
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
+        // 选项卡切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有活动状态
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 添加当前活动状态
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+        
+        // 单个验证
         document.getElementById('verify-btn').addEventListener('click', function() {
             const serial = document.getElementById('serial-input').value.trim();
-            const resultDiv = document.getElementById('result');
+            const resultDiv = document.getElementById('single-result');
             
             if (!serial) {
                 alert('请输入序列号');
                 return;
             }
             
-            // 验证逻辑 - 与主应用保持一致
+            // 验证逻辑
             const isValid = validateSerial(serial);
             
             resultDiv.innerHTML = isValid ? 
@@ -177,6 +312,84 @@
             resultDiv.className = 'result ' + (isValid ? 'valid' : 'invalid');
             resultDiv.style.display = 'block';
         });
+        
+        // 批量验证
+        document.getElementById('verify-batch-btn').addEventListener('click', function() {
+            const batchInput = document.getElementById('batch-input').value.trim();
+            const resultDiv = document.getElementById('batch-result');
+            
+            if (!batchInput) {
+                alert('请输入要验证的序列号列表');
+                return;
+            }
+            
+            const serials = batchInput.split('\n').map(s => s.trim()).filter(s => s);
+            const results = [];
+            
+            serials.forEach(serial => {
+                results.push({
+                    serial,
+                    valid: validateSerial(serial)
+                });
+            });
+            
+            // 计算统计信息
+            const validCount = results.filter(r => r.valid).length;
+            const invalidCount = results.filter(r => !r.valid).length;
+            const totalCount = results.length;
+            
+            let resultHTML = '<div class="batch-summary">验证完成: 总计 ' + totalCount + ' 个序列号, 有效 ' + validCount + ' 个, 无效 ' + invalidCount + ' 个</div>';
+            
+            // 添加验证结果
+            results.forEach(result => {
+                resultHTML += '<div class="verification-item ' + (result.valid ? 'valid' : 'invalid') + '">' +
+                    '<span>' + result.serial + '</span>' +
+                    '<span>' + (result.valid ? '有效' : '无效') + '</span>' +
+                    '</div>';
+            });
+            
+            // 添加操作按钮
+            resultHTML += '<div class="batch-actions">' +
+                '<button class="btn-success" id="export-valid-results"><i class="fas fa-file-export"></i> 导出有效序列号</button>' +
+                '<button class="btn-danger" id="export-invalid-results"><i class="fas fa-file-export"></i> 导出无效序列号</button>' +
+                '</div>';
+            
+            resultDiv.innerHTML = resultHTML;
+            resultDiv.className = 'result';
+            resultDiv.style.display = 'block';
+            
+            // 添加导出功能
+            document.getElementById('export-valid-results').addEventListener('click', function() {
+                exportResults(results.filter(r => r.valid), 'valid');
+            });
+            
+            document.getElementById('export-invalid-results').addEventListener('click', function() {
+                exportResults(results.filter(r => !r.valid), 'invalid');
+            });
+        });
+        
+        // 导出结果
+        function exportResults(results, type) {
+            if (results.length === 0) {
+                alert('没有可导出的数据');
+                return;
+            }
+            
+            let content = '序列号,状态\n';
+            results.forEach(result => {
+                content += result.serial + ',' + (result.valid ? '有效' : '无效') + '\n';
+            });
+            
+            const blob = new Blob([content], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'serial-validation-' + type + '-' + new Date().toISOString().slice(0,10) + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
         
         // 与主应用完全相同的验证函数
         function validateSerial(serial) {
