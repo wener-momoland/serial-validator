@@ -353,7 +353,7 @@
             <div class="brand-subtitle">中国官方验证器</div>
         </div>
         
-        <p>请输入19位产品序列号进行验证</p>
+        <p></p>
         
         <div class="tabs">
             <div class="tab active" data-tab="single">单个验证</div>
@@ -363,8 +363,8 @@
         <div class="tab-content active" id="single-tab-content">
             <div class="input-group">
                 <label for="serial-input"><i class="fas fa-key"></i> 19位序列号</label>
-                <input type="text" id="serial-input" class="serial-input" placeholder="请输入19位产品序列号" autocomplete="off" maxlength="19">
-                <div class="format-hint">格式: YYYYMMDD-XXXXXXXX-XX-X</div>
+                <input type="text" id="serial-input" class="serial-input" placeholder="请输入19位产品序列号" autocomplete="off">
+                <div class="format-hint">支持带短横线格式: YYYYMMDD-XXXXXXXX-XX-X</div>
             </div>
             
             <button id="verify-btn">
@@ -381,7 +381,7 @@
             
             <div class="input-group">
                 <label for="batch-input"><i class="fas fa-list"></i> 批量验证 (每行一个19位序列号)</label>
-                <textarea id="batch-input" placeholder="请输入多个19位序列号，每行一个"></textarea>
+                <textarea id="batch-input" placeholder="请输入多个19位序列号，每行一个（支持带短横线格式）"></textarea>
             </div>
             
             <button id="verify-batch-btn" class="btn-success">
@@ -415,7 +415,7 @@
             });
         });
         
-        // 单个验证
+        // 单个验证 - 修复版本
         document.getElementById('verify-btn').addEventListener('click', function() {
             const serial = document.getElementById('serial-input').value.trim().replace(/-/g, '').toUpperCase();
             const resultDiv = document.getElementById('single-result');
@@ -443,7 +443,7 @@
                 
                 resultDiv.innerHTML = isValid ? 
                     '<i class="fas fa-check-circle"></i> 序列号有效！' : 
-                    '<i class="fas fa-exclamation-circle"></i> 序列号无效，请检查后重试。';
+                    '<i class="fas fa-exclamation-circle"></i> 序列号无效，请支持正版！';
                 resultDiv.className = 'result ' + (isValid ? 'valid' : 'invalid');
                 resultDiv.style.display = 'block';
                 
@@ -456,7 +456,7 @@
             }, 500);
         });
         
-        // 批量验证
+        // 批量验证 - 修复版本
         document.getElementById('verify-batch-btn').addEventListener('click', function() {
             const batchInput = document.getElementById('batch-input').value.trim();
             const resultDiv = document.getElementById('batch-result');
@@ -505,13 +505,16 @@
             resultDiv.className = 'result';
             resultDiv.style.display = 'block';
             
-            document.getElementById('export-valid-results').addEventListener('click', function() {
-                exportResults(results.filter(r => r.valid), 'valid');
-            });
-            
-            document.getElementById('export-invalid-results').addEventListener('click', function() {
-                exportResults(results.filter(r => !r.valid), 'invalid');
-            });
+            // 修复导出按钮事件绑定
+            setTimeout(() => {
+                document.getElementById('export-valid-results').addEventListener('click', function() {
+                    exportResults(results.filter(r => r.valid), 'valid');
+                });
+                
+                document.getElementById('export-invalid-results').addEventListener('click', function() {
+                    exportResults(results.filter(r => !r.valid), 'invalid');
+                });
+            }, 100);
         });
         
         function exportResults(results, type) {
@@ -523,7 +526,7 @@
             let content = '序列号,状态\n';
             results.forEach(result => {
                 content += result.serial + ',' + (result.valid ? '有效' : '无效') + '\n';
-            }
+            });
             
             const blob = new Blob([content], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -587,19 +590,6 @@
         // 自动将输入转换为大写
         document.getElementById('serial-input').addEventListener('input', function() {
             this.value = this.value.toUpperCase();
-            
-            // 自动添加分隔符
-            let value = this.value.replace(/-/g, '');
-            if (value.length > 8) {
-                value = value.substring(0,8) + '-' + value.substring(8);
-            }
-            if (value.length > 17) {
-                value = value.substring(0,17) + '-' + value.substring(17);
-            }
-            if (value.length > 19) {
-                value = value.substring(0,19) + '-' + value.substring(19);
-            }
-            this.value = value;
         });
     </script>
 </body>
