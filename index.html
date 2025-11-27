@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOMOLAND中国官方验证器</title>
+    <title>MOMOLAND 中国官方验证器</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,7 +15,7 @@
         body {
             background: linear-gradient(135deg, #3498db, #2c3e50);
             margin: 0;
-            padding: 20px;
+            padding: 20px 15px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -24,24 +24,59 @@
         
         .container {
             background-color: white;
-            padding: 30px;
+            padding: 25px 20px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
             width: 100%;
+            max-width: 500px;
             text-align: center;
         }
         
-        h1 {
-            color: #2c3e50;
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .brand-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 15px;
-            font-size: 1.8rem;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .brand-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
         
         p {
             color: #7f8c8d;
             margin-bottom: 25px;
             line-height: 1.5;
+            font-size: 1rem;
         }
         
         .tabs {
@@ -52,13 +87,14 @@
         
         .tab {
             flex: 1;
-            padding: 12px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             font-weight: 600;
             color: #7f8c8d;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
         
         .tab.active {
@@ -84,20 +120,16 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #2c3e50;
+            font-size: 1rem;
         }
         
         input, textarea {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 18px;
             transition: border-color 0.3s;
-        }
-        
-        textarea {
-            min-height: 150px;
-            resize: vertical;
         }
         
         input:focus, textarea:focus {
@@ -105,14 +137,19 @@
             outline: none;
         }
         
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
         button {
             background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             border: none;
-            padding: 15px 25px;
+            padding: 18px 25px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             width: 100%;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -162,12 +199,6 @@
             border: 2px solid #f5c6cb;
         }
         
-        .logo {
-            font-size: 2.5rem;
-            color: #3498db;
-            margin-bottom: 15px;
-        }
-        
         .batch-summary {
             background-color: #e9ecef;
             padding: 15px;
@@ -205,6 +236,8 @@
         .batch-actions button {
             flex: 1;
             margin-bottom: 0;
+            padding: 14px 10px;
+            font-size: 16px;
         }
         
         .mobile-notice {
@@ -216,20 +249,39 @@
             margin: 15px 0;
             text-align: center;
             border: 1px solid #ffeaa7;
+            font-size: 0.9rem;
         }
         
+        /* 移动端优化 */
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
+            body {
+                padding: 15px 10px;
+                align-items: center;
             }
             
-            h1 {
-                font-size: 1.5rem;
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .brand-title {
+                font-size: 1.8rem;
+            }
+            
+            .brand-subtitle {
+                font-size: 1rem;
+            }
+            
+            p {
+                font-size: 0.95rem;
             }
             
             .tabs {
                 flex-direction: column;
+            }
+            
+            .tab {
+                padding: 12px;
+                font-size: 1rem;
             }
             
             .batch-actions {
@@ -243,6 +295,17 @@
             #batch-tab-content {
                 display: none !important;
             }
+            
+            /* 优化输入体验 */
+            input {
+                font-size: 16px; /* 防止iOS缩放 */
+                padding: 14px;
+            }
+            
+            button {
+                padding: 16px;
+                font-size: 16px;
+            }
         }
         
         @media (min-width: 769px) {
@@ -250,15 +313,47 @@
                 display: block;
             }
         }
+        
+        /* 输入优化 */
+        .serial-input {
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .format-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <i class="fas fa-shield-alt"></i>
+        <div class="brand-header">
+            <div class="brand-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="brand-title">MOMOLAND</div>
+            <div class="brand-subtitle">中国官方验证器</div>
         </div>
-        <h1>MOMOLAND中国官方验证器</h1>
-        <p>请输入您的产品序列号进行验证</p>
+        
+        <p>请输入19位产品序列号进行验证</p>
         
         <div class="tabs">
             <div class="tab active" data-tab="single">单个验证</div>
@@ -267,8 +362,9 @@
         
         <div class="tab-content active" id="single-tab-content">
             <div class="input-group">
-                <label for="serial-input"><i class="fas fa-key"></i> 序列号</label>
-                <input type="text" id="serial-input" placeholder="请输入产品序列号">
+                <label for="serial-input"><i class="fas fa-key"></i> 19位序列号</label>
+                <input type="text" id="serial-input" class="serial-input" placeholder="请输入19位产品序列号" autocomplete="off" maxlength="19">
+                <div class="format-hint">格式: YYYYMMDD-XXXXXXXX-XX-X</div>
             </div>
             
             <button id="verify-btn">
@@ -284,8 +380,8 @@
             </div>
             
             <div class="input-group">
-                <label for="batch-input"><i class="fas fa-list"></i> 批量验证 (每行一个序列号)</label>
-                <textarea id="batch-input" placeholder="请输入多个序列号，每行一个"></textarea>
+                <label for="batch-input"><i class="fas fa-list"></i> 批量验证 (每行一个19位序列号)</label>
+                <textarea id="batch-input" placeholder="请输入多个19位序列号，每行一个"></textarea>
             </div>
             
             <button id="verify-batch-btn" class="btn-success">
@@ -298,6 +394,16 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
+        // 移动端检测
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+        
+        // 如果是移动设备，隐藏批量验证标签
+        if (isMobileDevice()) {
+            document.getElementById('batch-tab').style.display = 'none';
+        }
+        
         // 选项卡切换
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -311,21 +417,43 @@
         
         // 单个验证
         document.getElementById('verify-btn').addEventListener('click', function() {
-            const serial = document.getElementById('serial-input').value.trim();
+            const serial = document.getElementById('serial-input').value.trim().replace(/-/g, '').toUpperCase();
             const resultDiv = document.getElementById('single-result');
+            const button = this;
+            const originalText = button.innerHTML;
             
             if (!serial) {
                 alert('请输入序列号');
                 return;
             }
             
-            const isValid = validateSerial(serial);
+            if (serial.length !== 19) {
+                alert('序列号必须是19位');
+                return;
+            }
             
-            resultDiv.innerHTML = isValid ? 
-                '<i class="fas fa-check-circle"></i> 序列号有效！' : 
-                '<i class="fas fa-exclamation-circle"></i> 序列号无效，请支持正版';
-            resultDiv.className = 'result ' + (isValid ? 'valid' : 'invalid');
-            resultDiv.style.display = 'block';
+            // 显示加载状态
+            button.innerHTML = '<div class="loading"></div> 验证中...';
+            button.disabled = true;
+            
+            // 模拟网络延迟，让用户体验更好
+            setTimeout(() => {
+                // 验证逻辑
+                const isValid = validateSerial(serial);
+                
+                resultDiv.innerHTML = isValid ? 
+                    '<i class="fas fa-check-circle"></i> 序列号有效！' : 
+                    '<i class="fas fa-exclamation-circle"></i> 序列号无效，请检查后重试。';
+                resultDiv.className = 'result ' + (isValid ? 'valid' : 'invalid');
+                resultDiv.style.display = 'block';
+                
+                // 恢复按钮状态
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // 自动聚焦到输入框，方便用户继续输入
+                document.getElementById('serial-input').focus();
+            }, 500);
         });
         
         // 批量验证
@@ -338,14 +466,21 @@
                 return;
             }
             
-            const serials = batchInput.split('\n').map(s => s.trim()).filter(s => s);
+            const serials = batchInput.split('\n').map(s => s.trim().replace(/-/g, '').toUpperCase()).filter(s => s);
             const results = [];
             
             serials.forEach(serial => {
-                results.push({
-                    serial,
-                    valid: validateSerial(serial)
-                });
+                if (serial.length === 19) {
+                    results.push({
+                        serial: formatSerialForDisplay(serial),
+                        valid: validateSerial(serial)
+                    });
+                } else {
+                    results.push({
+                        serial: serial,
+                        valid: false
+                    });
+                }
             });
             
             const validCount = results.filter(r => r.valid).length;
@@ -388,7 +523,7 @@
             let content = '序列号,状态\n';
             results.forEach(result => {
                 content += result.serial + ',' + (result.valid ? '有效' : '无效') + '\n';
-            });
+            }
             
             const blob = new Blob([content], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -402,22 +537,24 @@
         }
         
         function validateSerial(serial) {
-            if (!/^[A-Z0-9-]+$/.test(serial)) {
+            // 检查长度
+            if (serial.length !== 19) {
                 return false;
             }
             
-            const parts = serial.split('-');
-            
-            if (parts.length > 1) {
-                const providedChecksum = parts[parts.length - 1];
-                const serialWithoutChecksum = parts.slice(0, -1).join('');
-                
-                const expectedChecksum = calculateChecksum(serialWithoutChecksum);
-                
-                return providedChecksum === expectedChecksum;
+            // 检查字符集（只允许大写字母和数字）
+            if (!/^[A-Z0-9]+$/.test(serial)) {
+                return false;
             }
             
-            return serial.length >= 8;
+            // 提取前18位和校验位
+            const serialWithoutChecksum = serial.substring(0, 18);
+            const providedChecksum = serial.substring(18);
+            
+            // 计算期望的校验位
+            const expectedChecksum = calculateChecksum(serialWithoutChecksum);
+            
+            return providedChecksum === expectedChecksum;
         }
         
         function calculateChecksum(serial) {
@@ -433,19 +570,37 @@
             return (sum % 35).toString(36).toUpperCase();
         }
         
+        function formatSerialForDisplay(serial) {
+            if (serial.length === 19) {
+                return serial.substring(0,8) + '-' + serial.substring(8,16) + '-' + serial.substring(16,18) + '-' + serial.substring(18);
+            }
+            return serial;
+        }
+        
+        // 按Enter键触发验证
         document.getElementById('serial-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('verify-btn').click();
             }
         });
         
-        function isMobileDevice() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
-        
-        if (isMobileDevice()) {
-            document.getElementById('batch-tab').style.display = 'none';
-        }
+        // 自动将输入转换为大写
+        document.getElementById('serial-input').addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            
+            // 自动添加分隔符
+            let value = this.value.replace(/-/g, '');
+            if (value.length > 8) {
+                value = value.substring(0,8) + '-' + value.substring(8);
+            }
+            if (value.length > 17) {
+                value = value.substring(0,17) + '-' + value.substring(17);
+            }
+            if (value.length > 19) {
+                value = value.substring(0,19) + '-' + value.substring(19);
+            }
+            this.value = value;
+        });
     </script>
 </body>
 </html>
